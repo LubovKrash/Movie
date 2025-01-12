@@ -38,7 +38,7 @@ Then(
       (el) => el.textContent
     );
     if (titleText !== expectedText) {
-      throw new Error(`Expected "${expectedText}", but got "${titleText}"`);
+      throw new Error(`Ожидается "${expectedText}", но отображается "${titleText}"`);
     }
   }
 );
@@ -46,14 +46,14 @@ Then(
 When("no seances are available for today", async () => {
   const times = await page.$$(".movie-seances__time");
   if (times.length > 0) {
-    throw new Error("Seances are available for today");
+    throw new Error("Нет доступных сеансов сегодня");
   }
 });
 
 When("user navigate to the next day", async () => {
-  const btnNextDay = await page.$(".page-nav__day_chosen + .page-nav__day");
+  const btnNextDay = await page.$("a.page-nav__day_chosen + .page-nav__day");
   if (!btnNextDay) {
-    throw new Error("Next day button not found");
+    throw new Error("Кнопка смены дня не найдена");
   }
   await btnNextDay.click();
   await page.waitForTimeout(1000);
@@ -62,11 +62,14 @@ When("user navigate to the next day", async () => {
 Then("user should see available sessions", async () => {
   const times = await page.$$(".movie-seances__time");
   if (times.length === 0) {
-    throw new Error("No available seances found");
+    throw new Error("Нет доступных сеансов");
   }
 });
 
 When("user book three tickets", async () => {
+  await page.waitForSelector(
+    ".buying-scheme__chair.buying-scheme__chair_standart"
+  );
   const chairSelector =
     "span.buying-scheme__chair.buying-scheme__chair_standart:not(.buying-scheme__chair_taken):not(.buying-scheme__chair_selected)";
   for (let i = 0; i < 3; i++) {

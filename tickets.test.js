@@ -69,9 +69,7 @@ describe("Ticket Booking Tests", () => {
   test("Sad path - No available seances", async () => {
     let times = await page.$$(".movie-seances__time");
 
-    const btnNextDay = await page.$(
-      "a.page-nav__day :not(.page-nav__day_chosen)"
-    );
+    const btnNextDay = await page.$("a.page-nav__day_chosen + .page-nav__day");
     if (!btnNextDay) {
       throw new Error("Кнопка смены дня не найдена");
     }
