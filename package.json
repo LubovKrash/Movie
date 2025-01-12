@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "chai": "^5.1.2",
+    "cucumber": "^6.0.7",
     "jest": "^27.3.1",
     "jest-puppeteer": "^6.0.0",
     "puppeteer": "^13.3.2"

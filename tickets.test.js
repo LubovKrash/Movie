@@ -18,7 +18,7 @@ describe("Ticket Booking Tests", () => {
     await findAvailableSeances(page);
 
     await page.waitForSelector(
-      ".buying-scheme__chair.buying-scheme__chair_standart"
+      "span.buying-scheme__chair.buying-scheme__chair_standart"
     );
     await page.click(
       "span.buying-scheme__chair.buying-scheme__chair_standart:not(.buying-scheme__chair_taken):not(.buying-scheme__chair_selected)"
@@ -69,10 +69,9 @@ describe("Ticket Booking Tests", () => {
   test("Sad path - No available seances", async () => {
     let times = await page.$$(".movie-seances__time");
 
-    if (times.length === 0) {
-      console.log("Переход на следующий день");
-    }
-    const btnNextDay = await page.$(".page-nav__day_chosen + .page-nav__day");
+    const btnNextDay = await page.$(
+      "a.page-nav__day :not(.page-nav__day_chosen)"
+    );
     if (!btnNextDay) {
       throw new Error("Кнопка смены дня не найдена");
     }
@@ -86,14 +85,14 @@ describe("Ticket Booking Tests", () => {
 
     for (const timeElement of times) {
       const unavailable = await timeElement.evaluate((el) =>
-        el.classList.contains("acceptin-button-disabled")
+        el.classList.contains(".movie-seances__time acceptin-button-disabled")
       );
       if (!unavailable) {
         await timeElement.click();
-        return;
+        return; // циклом проходим и кликаем
       }
     }
 
-    throw new Error("Похоже в кино не идем")
+    throw new Error("Похоже в кино не идем");
   }, 20000);
 });
