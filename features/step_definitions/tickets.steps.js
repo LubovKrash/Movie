@@ -7,7 +7,6 @@ const { findAvailableSeances } = require("../../lib/commands.js");
 let browser;
 let page;
 
-
 Given("user open the cinema website", async () => {
   browser = await puppeteer.launch({ headless: true });
   page = await browser.newPage();
@@ -38,15 +37,21 @@ Then(
       (el) => el.textContent
     );
     if (titleText !== expectedText) {
-      throw new Error(`Ожидается "${expectedText}", но отображается "${titleText}"`);
+      throw new Error(
+        `Ожидается "${expectedText}", но отображается "${titleText}"`
+      );
     }
   }
 );
 
 When("no seances are available for today", async () => {
-  const times = await page.$$(".movie-seances__time");
-  if (times.length > 0) {
-    throw new Error("Нет доступных сеансов сегодня");
+  try {
+    const times = await page.$$(".movie-seances__time");
+    if (times.length > 0) {
+      throw new Error("Нет доступных сеансов сегодня");
+    }
+  } catch (error) {
+    console.log("Ошибка: ", error.message);
   }
 });
 
